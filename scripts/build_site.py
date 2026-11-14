@@ -68,7 +68,8 @@ VIDEOS = [("01-deschide-panoul-si-adauga-un-folder-de-sunete", "Deschide panoul 
 X = {"ro": dict(pdf="Manual PDF (română)", pdf_h="Manual PDF în toate limbile", vid_h="Tutoriale video", vid_p="Clipuri scurte, fără voce și fără text pe ecran. Interfața filmată este în română; titlurile rămân în română și în paginile în alte limbi.", vid_ch="Capitolul din manual"),
      "en": dict(pdf="PDF manual (English)", pdf_h="PDF manual in every language", vid_h="Video tutorials", vid_p="Short clips with no voice and no on-screen text. The filmed interface is in Romanian; the titles stay in Romanian on the pages in other languages.", vid_ch="Manual chapter"),
      "es": dict(pdf="Manual PDF (español)", pdf_h="Manual PDF en todos los idiomas", vid_h="Tutoriales en vídeo", vid_p="Clips cortos sin voz y sin texto en pantalla. La interfaz filmada está en rumano; los títulos se mantienen en rumano en las páginas de otros idiomas.", vid_ch="Capítulo del manual")}
-PDFN = {l: f"SoundSFXPaste-Manual-{l.upper()}-{VER}.pdf" for l in X}
+MANVER = "0.2.0"  # manuals keep their published file names until they are regenerated
+PDFN = {l: f"SoundSFXPaste-Manual-{l.upper()}-{MANVER}.pdf" for l in X}
 CSS += """.pdfs{margin:12px 0 0;font-size:14px;color:var(--mut)}.pdfs a{color:var(--fg);margin-right:10px}
 .vids{display:flex;flex-direction:column;gap:22px;margin-top:10px}.tut{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:18px;scroll-margin-top:16px}
 .tut video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px}.tut .tv p{margin:10px 0 0;font-size:14px}.tut a{color:var(--gold)}

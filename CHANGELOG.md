@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1
+- Rapid Mapping: after the last marker the green “all markers visited” message now stays correct when the panel redraws, and the next placement no longer shows a red internal error.
+
 ## 0.2.0
 - New look: dark blue base with gold actions, clearer typography and active states, a destination bar next to Place, and a layout that holds up in a narrow window.
 - Public credit now reads Dumitru Cristinel Gordas (GDC) only.

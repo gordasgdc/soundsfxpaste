@@ -233,7 +233,7 @@
     $('content').prepend(b);
   }
   async function rmAdvance(d) {
-    const i = rm.i + d; if (i >= rm.list.length) { setMsg('ok', () => t('mapDone', { n: rm.list.length })); rm = null; render(); return; } rm.i = clamp(i, 0, rm.list.length - 1);
+    const i = rm.i + d; if (i >= rm.list.length) { const total = rm.list.length; setMsg('ok', () => t('mapDone', { n: total })); rm = null; render(); return; } rm.i = clamp(i, 0, rm.list.length - 1);
     await api('/playhead', { project: status.project, timeline_id: status.timeline_id, frame: rm.list[rm.i].frame }); renderRm(); refresh();
   }
   const ident = () => ({ project: status.project, timeline_id: status.timeline_id });

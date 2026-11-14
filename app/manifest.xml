@@ -3,7 +3,7 @@
     <Plugin>
         <Id>com.gordas.soundsfxpaste</Id>
         <Name>SoundSFXPaste</Name>
-        <Version>0.2.0</Version>
+        <Version>0.2.1</Version>
         <Description>Sound effects library panel with safe placement for DaVinci Resolve</Description>
         <FilePath>main.js</FilePath>
     </Plugin>

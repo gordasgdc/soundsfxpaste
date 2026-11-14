@@ -49,3 +49,10 @@ srv.listen(0, '127.0.0.1', async () => {
   console.log(`${n} passed`);
 });
 
+
+// --- renderer: lazy message closures must not read mutable Rapid Mapping state (rm is nulled before the message is re-rendered)
+{
+  const src = fs.readFileSync(path.join(__dirname, '..', 'app', 'renderer.js'), 'utf8');
+  const bad = [...src.matchAll(/setMsg\([^;]*?=>[^;]*?\brm\./g)].map((m) => m[0].slice(0, 80));
+  assert.deepStrictEqual(bad, [], 'setMsg closure reads rm: ' + bad.join(' | ')); ok('no setMsg closure reads the nullable rm state');
+}
