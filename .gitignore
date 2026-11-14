@@ -1,0 +1,6 @@
+PROJECT_STATE.md
+.DS_Store
+PLAN_PUBLICARE.md
+__pycache__/
+dist/
+*.pyc

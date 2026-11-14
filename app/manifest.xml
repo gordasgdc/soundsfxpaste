@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlackmagicDesign>
+    <Plugin>
+        <Id>com.gordas.soundsfxpaste</Id>
+        <Name>SoundSFXPaste</Name>
+        <Version>0.2.0</Version>
+        <Description>Sound effects library panel with safe placement for DaVinci Resolve</Description>
+        <FilePath>main.js</FilePath>
+    </Plugin>
+</BlackmagicDesign>

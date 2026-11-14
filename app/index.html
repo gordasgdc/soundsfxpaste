@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src data:; media-src http://127.0.0.1:*; connect-src http://127.0.0.1:*">
+<title>SoundSFXPaste</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+ <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></symbol>
+ <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor" stroke="none"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.8l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.7 6.9 19.4l1-5.6-4.1-4 5.7-.8z"/></symbol>
+ <symbol id="i-place" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
+ <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></symbol>
+ <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19 8a8 8 0 1 0 1.6 5M19 3.5V8h-4.5"/></symbol>
+ <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></symbol>
+ <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/></symbol>
+ <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><path d="M8 8.5L20 18M8 15.5L20 6"/></symbol>
+ <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
+ <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="15" r="1" fill="currentColor"/></symbol>
+ <symbol id="i-swap" viewBox="0 0 24 24"><path d="M5 8h13l-3-3M19 16H6l3 3"/></symbol>
+ <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 20V4M6 5h11l-2 3.5 2 3.5H6"/></symbol>
+ <symbol id="i-steps" viewBox="0 0 24 24"><path d="M4 17h4v-4h4V9h4V5h4"/></symbol>
+ <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+ <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></symbol>
+ <symbol id="i-vol" viewBox="0 0 24 24"><path d="M4 10v4h3.5l4.5 3.5v-11L7.5 10zM15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+ <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 4h6l-1 5 3 3v1.5H7V12l3-3zM12 13.5V20"/></symbol>
+</defs></svg>
+
+<header>
+  <div class="brand"><span class="mark" aria-hidden="true"></span><h1>SoundSFXPaste</h1></div>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <button class="icon pin" id="btn-pin" aria-pressed="false"><svg class="ic"><use href="#i-pin"/></svg></button>
+  <button class="icon" id="btn-settings" aria-haspopup="dialog"><svg class="ic"><use href="#i-gear"/></svg></button>
+</header>
+
+<div id="settings" class="pop" hidden role="dialog">
+  <label>Language <select id="s-lang"><option value="en">English</option><option value="ro">Română</option><option value="es">Español</option></select></label>
+  <label class="row"><input type="checkbox" id="s-hover"> <span data-i="hover"></span></label>
+  <label>Warn <input id="s-warn" type="number" min="1" max="600" value="10"></label>
+  <button id="s-cache"></button>
+  <button id="s-deps"></button>
+  <div class="row"><span class="hint" id="s-credit"></span></div>
+  <div class="row"><span class="hint" id="s-ver"></span><span class="grow"></span><button id="s-upd" class="link"></button></div>
+  <button id="s-log" class="link"></button>
+  <p class="hint" id="s-dir"></p>
+  <button id="s-uninstall" class="link danger"></button>
+</div>
+
+<div id="upd" class="banner" hidden><b id="upd-t"></b><span class="grow"></span><button id="upd-later"></button><button id="upd-now" class="primary"></button></div>
+
+<main id="main">
+  <aside id="side" aria-label="Library">
+    <div class="side-head"><span data-i="library"></span>
+      <span class="grow"></span>
+      <button class="icon sm" id="btn-refresh"><svg class="ic"><use href="#i-refresh"/></svg></button>
+      <button class="icon sm" id="btn-add"><svg class="ic"><use href="#i-plus"/></svg></button></div>
+    <div id="tree" role="tree"></div>
+  </aside>
+  <section id="content">
+    <div class="searchbar"><input id="q" type="search" autocomplete="off"><select id="narrow-folder" aria-label="Folder"></select></div>
+    <div id="grid" role="listbox" tabindex="0" aria-label="Sounds"></div>
+    <div id="auto" hidden></div>
+    <p id="empty" class="hint" hidden></p>
+  </section>
+</main>
+
+<footer id="bar">
+  <div class="bar-l"><svg class="ic mute"><use href="#i-vol"/></svg><input id="vol" type="range" min="0" max="100" value="80" aria-label="Volume">
+     <svg class="ic mute"><use href="#i-grid"/></svg><input id="dens" type="range" min="0" max="100" value="45" aria-label="Density"></div>
+  <div class="dest" id="dest">
+    <div class="d-where"><button class="chip" id="d-conn" type="button"></button><span class="d-tl" id="d-tl"></span></div>
+    <div class="d-at"><label class="d-field"><span data-i="track"></span> <select id="track"></select></label>
+      <button class="icon sm" id="btn-addtrack"><svg class="ic"><use href="#i-plus"/></svg></button>
+      <span class="d-pos" id="d-pos"></span></div>
+    <div class="d-act"><button id="btn-trim" class="ghost"><svg class="ic"><use href="#i-scissors"/></svg><span data-i="trim"></span></button>
+      <button id="btn-place" class="primary"><svg class="ic"><use href="#i-place"/></svg><span data-i="place"></span></button></div>
+  </div>
+  <p id="msg" class="msg" role="status" aria-live="polite"></p>
+  <button class="link" id="btn-log"></button>
+</footer>
+<section id="log" hidden><div class="log-h"><b data-i="log"></b><button class="link" id="log-clear"></button></div><ul id="log-list"></ul></section>
+<dialog id="trimdlg"><h2 data-i="trimTitle"></h2><div class="wavebig"><canvas id="trimc"></canvas></div><p id="trim-r" class="hint"></p>
+  <div class="row-btns"><button id="trim-clear"></button><span class="grow"></span><button id="trim-cancel"></button><button id="trim-ok" class="primary"></button></div></dialog>
+<dialog id="depsdlg"><h2 id="deps-h"></h2><p id="deps-sum" class="hint"></p><ul id="deps-list"></ul>
+  <div class="row-btns"><button id="deps-log" class="link"></button><span class="grow"></span><button id="deps-re"></button><button id="deps-close" class="primary"></button></div></dialog>
+<dialog id="unidlg"><h2 id="uni-h"></h2><p id="uni-p"></p><div class="row-btns"><span class="grow"></span><button id="uni-no"></button><button id="uni-yes" class="primary"></button></div></dialog>
+<script src="i18n.js"></script><script src="renderer.js"></script>
+</body></html>
