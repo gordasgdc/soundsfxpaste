@@ -36,6 +36,15 @@ Descarcă installerul semnat și notarizat din pagina Releases, rulează-l, apoi
 
 Sesizările și pull request-urile sunt binevenite; vezi [CONTRIBUTING.md](CONTRIBUTING.md). Documentație: [gordas.dev/soundsfxpaste](https://gordas.dev/soundsfxpaste/).
 
+## Documentație
+
+Manuale ilustrate, pas cu pas (PDF, 15 pagini fiecare), regenerate cu `python3 scripts/build_manual.py`:
+
+- [Manual PDF — Română](https://gordas.dev/soundsfxpaste/manual/SoundSFXPaste-Manual-RO-0.2.0.pdf)
+- [PDF manual — English](https://gordas.dev/soundsfxpaste/manual/SoundSFXPaste-Manual-EN-0.2.0.pdf)
+- [Manual PDF — Español](https://gordas.dev/soundsfxpaste/manual/SoundSFXPaste-Manual-ES-0.2.0.pdf)
+- Tutoriale video (fără voce, interfață în română): https://gordas.dev/soundsfxpaste/#tutoriale-video
+
 ## Licență
 
 MIT. Autor: Dumitru Cristinel Gordas (GDC). Susținerea este opțională și ia forma unei donații. Vezi NOTICE.md și docs/PROVENANCE.md.

@@ -57,6 +57,27 @@ section{padding:46px 0}h2{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 18px
 .two{display:grid;grid-template-columns:1fr 1fr;gap:32px}ul{padding-left:1.1em;margin:0}li{margin:.4em 0}.two li{color:var(--mut)}
 footer{max-width:1180px;margin:20px auto 0;padding:34px 24px 50px;border-top:1px solid var(--line);color:var(--mut);font-size:13px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}footer div{display:flex;gap:18px;flex-wrap:wrap}
 @media(max-width:820px){.steps,.grid,.two{grid-template-columns:1fr}header{padding:14px 16px}main{padding:0 16px}footer{padding:28px 16px}}"""
+
+VIDEOS = [("01-deschide-panoul-si-adauga-un-folder-de-sunete", "Deschide panoul și adaugă un folder de sunete", 4),
+          ("02-cauta-asculta-si-plaseaza-un-sunet-la-cursor", "Caută, ascultă și plasează un sunet la cursor", 6),
+          ("03-scurteaza-un-sunet", "Scurtează un sunet", 7), ("04-inlocuieste-un-sunet-in-timeline", "Înlocuiește un sunet în timeline", 8),
+          ("05-foloseste-markere-si-etichete", "Folosește markere și etichete", 9), ("06-completeaza-markerele-cu-sunete-aleatorii", "Completează markerele cu sunete aleatorii", 10),
+          ("07-asociaza-rapid-sunete-cu-markerele", "Asociază rapid sunete cu markerele", 11)]  # (file, title in Romanian on every page, manual chapter)
+X = {"ro": dict(pdf="Manual PDF (română)", pdf_h="Manual PDF în toate limbile", vid_h="Tutoriale video", vid_p="Clipuri scurte, fără voce și fără text pe ecran. Interfața filmată este în română; titlurile rămân în română și în paginile în alte limbi.", vid_ch="Capitolul din manual"),
+     "en": dict(pdf="PDF manual (English)", pdf_h="PDF manual in every language", vid_h="Video tutorials", vid_p="Short clips with no voice and no on-screen text. The filmed interface is in Romanian; the titles stay in Romanian on the pages in other languages.", vid_ch="Manual chapter"),
+     "es": dict(pdf="Manual PDF (español)", pdf_h="Manual PDF en todos los idiomas", vid_h="Tutoriales en vídeo", vid_p="Clips cortos sin voz y sin texto en pantalla. La interfaz filmada está en rumano; los títulos se mantienen en rumano en las páginas de otros idiomas.", vid_ch="Capítulo del manual")}
+PDFN = {l: f"SoundSFXPaste-Manual-{l.upper()}-{VER}.pdf" for l in X}
+CSS += """.pdfs{margin:12px 0 0;font-size:14px;color:var(--mut)}.pdfs a{color:var(--fg);margin-right:10px}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:8px}.vids figure{margin:0;background:var(--s1);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.vids video{display:block;width:100%;aspect-ratio:16/9;background:#000}.vids figcaption{padding:12px 14px;font-size:14px}.vids figcaption b{display:block;font-size:15px;margin-bottom:4px}.vids a{color:var(--gold)}"""
+def chap_pages(L):
+    try:
+        import pymupdf
+        toc = [t[2] for t in pymupdf.open(f"{R}/docs/manual/pdf/{PDFN[L]}").get_toc()]
+        return {n: toc[n - 1] for n in range(1, len(toc) + 1)}
+    except Exception:
+        return {}
+
 def page(L):
     t = T[L]; up = "" if L == "ro" else "../"
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{T[l]["path"]}">' for l in T) + f'<link rel="alternate" hreflang="x-default" href="{BASE}">'
@@ -64,6 +85,9 @@ def page(L):
     e = html.escape
     steps = "".join(f"<li><b>{e(a)}</b><span>{e(b)}</span></li>" for a, b in t["fl"])
     feats = "".join(f"<div><b>{e(a)}</b><span>{e(b)}</span></div>" for a, b in t["ft"])
+    cp = chap_pages(L)
+    pdf_links = " · ".join(f'<a href="{up}manual/{PDFN[l]}" hreflang="{l}">{l.upper()}</a>' for l in X)
+    vids = "".join(f'<figure><video controls preload="none" playsinline poster="{up}assets/video-{i}.jpg" src="{up}video/{f}.mp4"></video><figcaption><b>{e(ti)}</b>{e(X[L]["vid_ch"])}: <a href="{up}manual/{PDFN[L]}#page={cp.get(ch, 1)}">{ch}</a></figcaption></figure>' for i, (f, ti, ch) in enumerate(VIDEOS, 1))
     shot = {"ro": "ro-folders", "en": "en-folders", "es": "es-folders"}[L]
     return f"""<!doctype html><html lang="{L}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(t['title'])}</title>
 <meta name="description" content="{e(t['desc'])}"><link rel="canonical" href="{BASE}{t['path']}">{alts}
@@ -71,10 +95,11 @@ def page(L):
 <link rel="icon" href="{up}assets/simbol.svg" type="image/svg+xml"><style>{CSS}</style></head><body>
 <header><a class="brand" href="{up or './'}"><i></i>SoundSFXPaste</a><nav class="lang" aria-label="{e(t['nav'])}">{lang}</nav></header>
 <main><div class="hero"><div><div class="eyebrow">{e(t['eyebrow'])}</div><h1>{e(t['h1'])}</h1><p class="lead">{e(t['lead'])}</p>
-<div class="cta"><a class="btn" id="download" href="{PKG}">{e(t['dl'])}</a><a class="btn ghost" href="{REPO}">{e(t['src'])}</a></div><p class="note">{e(t['dlnote'])}</p></div>
+<div class="cta"><a class="btn" id="download" href="{PKG}">{e(t['dl'])}</a><a class="btn ghost" href="{up}manual/{PDFN[L]}">{e(X[L]['pdf'])}</a><a class="btn ghost" href="{REPO}">{e(t['src'])}</a></div><p class="note">{e(t['dlnote'])}</p><p class="pdfs">{e(X[L]['pdf_h'])}: {pdf_links}</p></div>
 <img class="shot" src="{up}assets/{shot}.png" alt="{e(t['shot_alt'])}" width="1180" height="760"></div>
 <section id="flow"><h2>{e(t['fl_h'])}</h2><ol class="steps">{steps}</ol></section>
 <section id="features"><h2>{e(t['ft_h'])}</h2><div class="grid">{feats}</div></section>
+<section id="tutoriale-video"><h2>{e(X[L]['vid_h'])}</h2><p class="note">{e(X[L]['vid_p'])}</p><div class="vids">{vids}</div></section>
 <section class="two"><div id="install"><h2>{e(t['rq_h'])}</h2><ul>{''.join(f'<li>{e(x)}</li>' for x in t['rq'])}</ul></div><div><h2>{e(t['lm_h'])}</h2><ul>{''.join(f'<li>{e(x)}</li>' for x in t['lm'])}</ul></div></section></main>
 <footer><span>SoundSFXPaste {VER} · {e(t['lic'])}<br><span style="display:block;margin-top:8px;max-width:52ch">{e(t['sup'])}</span></span><div><a href="{REPO}#readme">{e(t['docs'])}</a><a href="{REPO}">GitHub</a><a href="https://gordas.dev/termeni">{e(t['terms'])}</a><a href="https://gordas.dev/confidentialitate">{e(t['priv'])}</a><a href="https://gordas.dev/cookie">{e(t['cookie'])}</a></div></footer></body></html>"""
 out = f"{R}/site"; shutil.rmtree(out, ignore_errors=True); os.makedirs(f"{out}/assets")
@@ -97,3 +122,12 @@ for i, ln in enumerate(["Find the sound.", "Hear it.", "Drop it on", "the timeli
 d.text((60, 520), "Free DaVinci Resolve panel · macOS · MIT", font=font(26, False), fill="#98a6cc")
 bg.save(f"{out}/assets/social-preview.png", optimize=True); bg.save(f"{R}/docs/img/social-preview.png", optimize=True)
 print("site built", VER)
+os.makedirs(f"{out}/manual", exist_ok=True); os.makedirs(f"{out}/video", exist_ok=True)
+for l in X:
+    if os.path.exists(f"{R}/docs/manual/pdf/{PDFN[l]}"): shutil.copy(f"{R}/docs/manual/pdf/{PDFN[l]}", f"{out}/manual/")
+import subprocess
+for i, (f, ti, ch) in enumerate(VIDEOS, 1):
+    src = f"{R}/docs/video/{f}.mp4"
+    if os.path.exists(src):
+        shutil.copy(src, f"{out}/video/")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "9", "-i", src, "-frames:v", "1", "-vf", "scale=640:-1", "-q:v", "5", f"{out}/assets/video-{i}.jpg"], check=False)

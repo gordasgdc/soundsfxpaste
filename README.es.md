@@ -36,6 +36,15 @@ Descarga el instalador firmado y notarizado desde Releases, ejecútalo y abre Wo
 
 Se aceptan incidencias y pull requests; consulta [CONTRIBUTING.md](CONTRIBUTING.md). Documentación: [gordas.dev/soundsfxpaste](https://gordas.dev/soundsfxpaste/es/).
 
+## Documentación
+
+Manuales ilustrados paso a paso (PDF, 15 páginas cada uno), regenerados con `python3 scripts/build_manual.py`:
+
+- [Manual PDF — Română](https://gordas.dev/soundsfxpaste/manual/SoundSFXPaste-Manual-RO-0.2.0.pdf)
+- [PDF manual — English](https://gordas.dev/soundsfxpaste/manual/SoundSFXPaste-Manual-EN-0.2.0.pdf)
+- [Manual PDF — Español](https://gordas.dev/soundsfxpaste/manual/SoundSFXPaste-Manual-ES-0.2.0.pdf)
+- Tutoriales en vídeo (sin voz, interfaz en rumano): https://gordas.dev/soundsfxpaste/#tutoriale-video
+
 ## Licencia
 
 MIT. Autor: Dumitru Cristinel Gordas (GDC). El apoyo es opcional y se hace como donación. Ver NOTICE.md y docs/PROVENANCE.md.

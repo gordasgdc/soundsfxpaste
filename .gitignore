@@ -4,3 +4,5 @@ PLAN_PUBLICARE.md
 __pycache__/
 dist/
 *.pyc
+site/manual/
+site/video/
