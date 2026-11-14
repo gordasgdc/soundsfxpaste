@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Builds the public pages (RO root, /en/, /es/) into site/ and the social preview. Usage: scripts/build_site.py"""
-import json, os, shutil, html
+import json, os, shutil, html, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tutorials as TU
 from PIL import Image, ImageDraw, ImageFont
 R = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 VER = json.load(open(f"{R}/app/package.json"))["version"]
@@ -68,8 +70,11 @@ X = {"ro": dict(pdf="Manual PDF (română)", pdf_h="Manual PDF în toate limbile
      "es": dict(pdf="Manual PDF (español)", pdf_h="Manual PDF en todos los idiomas", vid_h="Tutoriales en vídeo", vid_p="Clips cortos sin voz y sin texto en pantalla. La interfaz filmada está en rumano; los títulos se mantienen en rumano en las páginas de otros idiomas.", vid_ch="Capítulo del manual")}
 PDFN = {l: f"SoundSFXPaste-Manual-{l.upper()}-{VER}.pdf" for l in X}
 CSS += """.pdfs{margin:12px 0 0;font-size:14px;color:var(--mut)}.pdfs a{color:var(--fg);margin-right:10px}
-.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:8px}.vids figure{margin:0;background:var(--s1);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.vids video{display:block;width:100%;aspect-ratio:16/9;background:#000}.vids figcaption{padding:12px 14px;font-size:14px}.vids figcaption b{display:block;font-size:15px;margin-bottom:4px}.vids a{color:var(--gold)}"""
+.vids{display:flex;flex-direction:column;gap:22px;margin-top:10px}.tut{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:18px;scroll-margin-top:16px}
+.tut video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px}.tut .tv p{margin:10px 0 0;font-size:14px}.tut a{color:var(--gold)}
+.tut h3{margin:0 0 6px;font-size:19px}.tut h4{margin:14px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold)}.tut .goal{margin:0;font-size:15px}
+.tut ol,.tut ul{padding-left:1.2em;margin:0}.tut li{margin:.35em 0;color:var(--fg);font-size:15px;overflow-wrap:anywhere}.tut p{overflow-wrap:anywhere}.tut .names{font-size:13px;color:var(--mut)}
+@media(max-width:820px){.tut{grid-template-columns:1fr;padding:14px;gap:16px}}"""
 def chap_pages(L):
     try:
         import pymupdf
@@ -87,7 +92,17 @@ def page(L):
     feats = "".join(f"<div><b>{e(a)}</b><span>{e(b)}</span></div>" for a, b in t["ft"])
     cp = chap_pages(L)
     pdf_links = " · ".join(f'<a href="{up}manual/{PDFN[l]}" hreflang="{l}">{l.upper()}</a>' for l in X)
-    vids = "".join(f'<figure><video controls preload="none" playsinline poster="{up}assets/video-{i}.jpg" src="{up}video/{f}.mp4"></video><figcaption><b>{e(ti)}</b>{e(X[L]["vid_ch"])}: <a href="{up}manual/{PDFN[L]}#page={cp.get(ch, 1)}">{ch}</a></figcaption></figure>' for i, (f, ti, ch) in enumerate(VIDEOS, 1))
+    def tut(i, tu):
+        f, ti, ch = tu["file"], tu["title"], tu["chap"][0]
+        L_ = lambda k: TU.loc(tu[k], L); R_ = lambda x: TU.render(L, x, "html"); hh = TU.H[L]
+        names = TU.ro_names(L, tu)
+        nm = f'<p class="names">{e(hh["names"])}: ' + "; ".join(f"{e(a)} = {e(b)}" for a, b in names) + "</p>" if names else ""
+        li = lambda xs, tag: f"<{tag}>" + "".join(f"<li>{R_(x)}</li>" for x in xs) + f"</{tag}>"
+        return (f'<article class="tut" id="clip-{i}"><div class="tv"><video controls preload="none" playsinline poster="{up}assets/video-{i}.jpg" src="{up}video/{f}.mp4"></video>'
+                f'<p>{e(X[L]["vid_ch"])}: <a href="{up}manual/{PDFN[L]}#page={cp.get(ch, 1)}">{ch}</a></p></div>'
+                f'<div class="tt"><h3>{i}. {e(ti)}</h3><p class="goal">{R_(L_("goal"))}</p><h4>{e(hh["need"])}</h4>{li(L_("need"), "ul")}<h4>{e(hh["steps"])}</h4>{li(L_("steps"), "ol")}'
+                f'<h4>{e(hh["see"])}</h4>{li(L_("see"), "ul")}<h4>{e(hh["ex"])}</h4><p>{R_(L_("example"))}</p><h4>{e(hh["fix"])}</h4><p>{R_(L_("fix"))}</p>{nm}</div></article>')
+    vids = "".join(tut(i, tu) for i, tu in enumerate(TU.TUT, 1))
     shot = {"ro": "ro-folders", "en": "en-folders", "es": "es-folders"}[L]
     return f"""<!doctype html><html lang="{L}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(t['title'])}</title>
 <meta name="description" content="{e(t['desc'])}"><link rel="canonical" href="{BASE}{t['path']}">{alts}
